@@ -1,13 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { SignIn } from "@clerk/react";
-import { X } from "lucide-react";
+import { Bookmark, Download, X } from "lucide-react";
 import { useEffect } from "react";
-
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 export function LoginRequired({
   open,
   onClose,
+  reason = "save",
 }: {
   open: boolean;
   onClose: () => void;
@@ -17,8 +16,19 @@ export function LoginRequired({
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
   }, [open, onClose]);
+
+  const isSave = reason === "save";
+  const heading = isSave ? "Sign in to save illustrations" : "Sign in to download illustrations";
+  const subtitle = isSave
+    ? "Create your personal collection and access your saved illustrations from any device."
+    : "Get instant access to high-quality downloads and unlock your personal library.";
+  const Icon = isSave ? Bookmark : Download;
 
   return (
     <AnimatePresence>
@@ -28,7 +38,7 @@ export function LoginRequired({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[110] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-[110] bg-foreground/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto"
           onClick={onClose}
         >
           <motion.div
@@ -37,7 +47,7 @@ export function LoginRequired({
             exit={{ opacity: 0, scale: 0.94, y: 12 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative"
+            className="relative my-auto"
           >
             <button
               aria-label="Close"
@@ -47,10 +57,22 @@ export function LoginRequired({
               <X size={18} />
             </button>
 
+            <div className="flex flex-col items-center text-center mb-5 px-4">
+              <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <Icon size={20} />
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight text-foreground mb-2">
+                {heading}
+              </h2>
+              <p className="text-muted-foreground text-sm max-w-sm leading-relaxed">
+                {subtitle}
+              </p>
+            </div>
+
             <SignIn
-              routing="path"
-              path={`${basePath}/sign-in`}
-              signUpUrl={`${basePath}/sign-up`}
+              routing="virtual"
+              signUpUrl="/sign-up"
+              fallbackRedirectUrl={typeof window !== "undefined" ? window.location.pathname + window.location.search : "/"}
             />
           </motion.div>
         </motion.div>
