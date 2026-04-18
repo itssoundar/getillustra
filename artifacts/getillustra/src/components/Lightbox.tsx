@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, ArrowRight, ArrowLeft, Bookmark, Copy, Download,
-  Link as LinkIcon, ChevronDown, Image as ImageIcon, Check, Lock,
+  Link as LinkIcon, ChevronDown, Image as ImageIcon, Check,
 } from "lucide-react";
 
 export interface LightboxProps {
@@ -83,17 +83,13 @@ export function Lightbox({
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  aria-label={canSave ? (saved ? "Unsave" : "Save") : "Sign in to save"}
+                  aria-label={saved ? "Unsave" : "Save"}
                   onClick={onToggleSave}
                   className={`hidden sm:flex w-9 h-9 rounded-full items-center justify-center transition-colors ${
                     saved ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   }`}
                 >
-                  {canSave ? (
-                    <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
-                  ) : (
-                    <Lock size={14} />
-                  )}
+                  <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
                 </button>
                 <button
                   aria-label="Copy link"
@@ -161,11 +157,7 @@ export function Lightbox({
                       : "bg-card text-foreground border border-border hover:bg-secondary"
                   }`}
                 >
-                  {canSave ? (
-                    <Bookmark size={14} fill={saved ? "currentColor" : "none"} />
-                  ) : (
-                    <Lock size={14} />
-                  )}
+                  <Bookmark size={14} fill={saved ? "currentColor" : "none"} />
                   {saved ? "Saved" : "Save"}
                 </button>
                 <button
@@ -179,7 +171,7 @@ export function Lightbox({
                   onClick={() => onDownload(index)}
                   className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-card text-foreground border border-border text-sm font-semibold hover:bg-secondary transition-colors shadow-md"
                 >
-                  {canDownload ? <Download size={14} /> : <Lock size={14} />}
+                  <Download size={14} />
                   Download
                 </button>
               </div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
 import { useUser } from "@clerk/react";
-import { ArrowLeft, ArrowUpRight, Bookmark, Download, Link2, Check, Lock } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Bookmark, Download, Link2, Check, Circle, CheckCircle2 } from "lucide-react";
 import { GALLERY } from "@/lib/gallery";
 import { Header, AnnouncementBar } from "@/components/Header";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -21,6 +21,16 @@ export default function Detail() {
   const [copied, setCopied] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [authPrompt, setAuthPrompt] = useState<null | "save" | "download">(null);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+
+  const toggleSelected = (i: number) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  };
 
   useEffect(() => {
     if (item) recordView(item.slug);
@@ -158,31 +168,41 @@ export default function Detail() {
               {/* Hover gradient */}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
 
-              {/* Hover actions: Download + Save (or Lock if signed out) */}
+              {/* Top-left: selection radio (visible on hover or when selected) */}
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleSelected(i); }}
+                aria-label={selected.has(i) ? "Deselect" : "Select"}
+                title={selected.has(i) ? "Deselect" : "Select"}
+                className={`absolute top-3 left-3 w-7 h-7 rounded-full flex items-center justify-center transition-opacity shadow-md ${
+                  selected.has(i)
+                    ? "bg-primary text-primary-foreground opacity-100"
+                    : "bg-white/90 text-foreground opacity-0 group-hover:opacity-100 hover:bg-white"
+                }`}
+              >
+                {selected.has(i) ? <CheckCircle2 size={18} /> : <Circle size={16} />}
+              </button>
+
+              {/* Top-right: Download + Save */}
               <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={(e) => { e.stopPropagation(); downloadAsset(src, i); }}
-                  aria-label={isSignedIn ? "Download" : "Sign in to download"}
-                  title={isSignedIn ? "Download" : "Sign in to download"}
+                  aria-label="Download"
+                  title="Download"
                   className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md text-foreground flex items-center justify-center shadow-md hover:bg-white transition-colors"
                 >
-                  {isSignedIn ? <Download size={16} /> : <Lock size={14} />}
+                  <Download size={16} />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); toggleAssetSave(); }}
-                  aria-label={isSignedIn ? (saved ? "Unsave" : "Save") : "Sign in to save"}
-                  title={isSignedIn ? (saved ? "Unsave" : "Save") : "Sign in to save"}
+                  aria-label={saved ? "Unsave" : "Save"}
+                  title={saved ? "Unsave" : "Save"}
                   className={`w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center shadow-md transition-colors ${
                     isSignedIn && saved
                       ? "bg-primary text-primary-foreground"
                       : "bg-white/90 text-foreground hover:bg-white"
                   }`}
                 >
-                  {isSignedIn ? (
-                    <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
-                  ) : (
-                    <Lock size={14} />
-                  )}
+                  <Bookmark size={16} fill={isSignedIn && saved ? "currentColor" : "none"} />
                 </button>
               </div>
             </motion.div>
