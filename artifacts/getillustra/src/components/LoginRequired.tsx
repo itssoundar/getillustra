@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Bookmark, Download, X, LogIn, Loader2, Mail, Check } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -15,7 +14,7 @@ export function LoginRequired({
   reason?: "save" | "download" | "signin";
 }) {
   const [email, setEmail] = useState("");
-  const [busy, setBusy] = useState<null | "google" | "github" | "email">(null);
+  const [busy, setBusy] = useState<null | "google" | "email">(null);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,7 +62,7 @@ export function LoginRequired({
       ? `${window.location.origin}${window.location.pathname}${window.location.search}`
       : undefined;
 
-  const oauth = async (provider: "google" | "github") => {
+  const oauth = async (provider: "google") => {
     setError(null);
     setBusy(provider);
     const { error } = await supabase.auth.signInWithOAuth({
@@ -151,16 +150,6 @@ export function LoginRequired({
                     {busy === "google" ? <Loader2 size={16} className="animate-spin" /> : <FcGoogle size={18} />}
                     Continue with Google
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => oauth("github")}
-                    disabled={!!busy}
-                    className="w-full flex items-center justify-center gap-3 h-11 rounded-full border border-border bg-card hover:bg-secondary text-foreground text-sm font-semibold transition-colors disabled:opacity-60"
-                  >
-                    {busy === "github" ? <Loader2 size={16} className="animate-spin" /> : <FaGithub size={16} />}
-                    Continue with GitHub
-                  </button>
-
                   <div className="flex items-center gap-3 py-2">
                     <div className="flex-1 h-px bg-border" />
                     <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
