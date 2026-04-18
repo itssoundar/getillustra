@@ -216,16 +216,24 @@ export default function Detail() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ duration: 0.5, delay: (i % 4) * 0.05 }}
-                className={`group relative rounded-3xl overflow-hidden bg-secondary border aspect-[4/3] transition-all ${
+                onClick={() => setLightboxIndex(i)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setLightboxIndex(i);
+                  }
+                }}
+                className={`group relative rounded-3xl overflow-hidden bg-secondary border aspect-[4/3] transition-all cursor-zoom-in ${
                   isSelected ? "border-primary ring-2 ring-primary/40" : "border-border/60"
                 }`}
               >
                 <img
                   src={src}
                   alt={`${item.title} preview ${i + 1}`}
-                  className="w-full h-full object-cover cursor-zoom-in"
+                  className="w-full h-full object-cover"
                   loading="lazy"
-                  onClick={() => setLightboxIndex(i)}
                   onError={(e) => {
                     const t = e.target as HTMLImageElement;
                     t.src = `https://placehold.co/1200x900/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
@@ -239,7 +247,7 @@ export default function Detail() {
 
                 {/* Top-left: select radio */}
                 <button
-                  onClick={() => toggleSelect(i)}
+                  onClick={(e) => { e.stopPropagation(); toggleSelect(i); }}
                   aria-label={isSelected ? "Deselect" : "Select"}
                   className={`absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                     isSelected
@@ -259,7 +267,7 @@ export default function Detail() {
                   isMenuOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                 }`}>
                   <button
-                    onClick={() => setOpenMenu(isMenuOpen ? null : i)}
+                    onClick={(e) => { e.stopPropagation(); setOpenMenu(isMenuOpen ? null : i); }}
                     aria-label="More actions"
                     className="w-8 h-8 rounded-full bg-white/85 backdrop-blur-md text-foreground flex items-center justify-center hover:bg-white shadow-sm"
                   >
@@ -275,13 +283,13 @@ export default function Detail() {
                         className="absolute right-0 mt-2 w-48 rounded-2xl bg-card border border-border shadow-xl overflow-hidden z-10"
                       >
                         <button
-                          onClick={() => downloadTile(src, i)}
+                          onClick={(e) => { e.stopPropagation(); downloadTile(src, i); }}
                           className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors text-left"
                         >
                           <Download size={15} /> Download
                         </button>
                         <button
-                          onClick={() => copyTileLink(src, i)}
+                          onClick={(e) => { e.stopPropagation(); copyTileLink(src, i); }}
                           className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors text-left"
                         >
                           <LinkIcon size={15} />
@@ -297,14 +305,14 @@ export default function Detail() {
                   isMenuOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                 }`}>
                   <button
-                    onClick={() => (saved ? remove.mutate(item.slug) : add.mutate(item.slug))}
+                    onClick={(e) => { e.stopPropagation(); (saved ? remove.mutate(item.slug) : add.mutate(item.slug)); }}
                     className="flex-1 px-4 py-2.5 rounded-full bg-white text-foreground text-sm font-semibold shadow-sm hover:bg-white/95 transition-colors flex items-center justify-center gap-2"
                   >
                     <Bookmark size={14} fill={saved ? "currentColor" : "none"} />
                     {saved ? "Saved" : "Save"}
                   </button>
                   <button
-                    onClick={() => copyTileLink(src, i)}
+                    onClick={(e) => { e.stopPropagation(); copyTileLink(src, i); }}
                     className="flex-1 px-4 py-2.5 rounded-full bg-foreground/85 text-background text-sm font-semibold backdrop-blur-md hover:bg-foreground transition-colors flex items-center justify-center gap-2"
                   >
                     <Copy size={14} />
