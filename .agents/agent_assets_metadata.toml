@@ -1,0 +1,74 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "jF72NwLyS12v1-ja1Erkx"
+uri = "file://artifacts/getillustra/public/images/3d-1.png"
+type = "image"
+title = "3D geometric shapes"
+
+[[generated]]
+id = "YXOioYHSaZrrcVcfhPS16"
+uri = "file://artifacts/getillustra/public/images/iso-1.png"
+type = "image"
+title = "Isometric workspace"
+
+[[generated]]
+id = "HJU3XGVMyORQ9LQPATB1_"
+uri = "file://artifacts/getillustra/public/images/doodle-1.png"
+type = "image"
+title = "Playful doodle art"
+
+[[generated]]
+id = "ZTsjPSgtf86f-s5L3oYmv"
+uri = "file://artifacts/getillustra/public/images/mobile-1.png"
+type = "image"
+title = "Mobile app UI"
+
+[[generated]]
+id = "_oR65bbeRd5CCPb7xDwc_"
+uri = "file://artifacts/getillustra/public/images/web-1.png"
+type = "image"
+title = "Website hero illustration"
+
+[[generated]]
+id = "wW-oJSP8c0-yxZSRNcf5H"
+uri = "file://artifacts/getillustra/public/images/collage-1.png"
+type = "image"
+title = "Creative collage art"
+
+[[generated]]
+id = "6C39EnC7RwrO1pa3M09xM"
+uri = "file://artifacts/getillustra/public/images/3d-2.png"
+type = "image"
+title = "3D character waving"
+
+[[generated]]
+id = "mZ2hr6xsW6Fr2j5z9waLZ"
+uri = "file://artifacts/getillustra/public/images/iso-2.png"
+type = "image"
+title = "Isometric coffee shop"
+
+[[generated]]
+id = "YaqRGVNwVpSSDFLaZfPIr"
+uri = "file://artifacts/getillustra/public/images/2d-1.png"
+type = "image"
+title = "Abstract 2D nature"
+
+[[generated]]
+id = "wzUXU2AkOl8XpLX2eaSgN"
+uri = "file://artifacts/getillustra/public/images/mobile-2.png"
+type = "image"
+title = "App onboarding illustration"
+
+[[generated]]
+id = "XQl9u_AEbNWw3nfRs-f1S"
+uri = "file://artifacts/getillustra/public/images/collage-2.png"
+type = "image"
+title = "Surreal collage art"
+
+[[generated]]
+id = "bd05DxBthlxuNjZMBCBKw"
+uri = "file://artifacts/getillustra/public/images/doodle-2.png"
+type = "image"
+title = "Typographic doodle poster"
