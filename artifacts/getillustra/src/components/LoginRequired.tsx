@@ -1,7 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { SignIn } from "@clerk/react";
-import { Bookmark, Download, X, LogIn } from "lucide-react";
-import { useEffect } from "react";
+import { Bookmark, Download, X, LogIn, Loader2, Mail, Check } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export function LoginRequired({
   open,
@@ -12,6 +14,11 @@ export function LoginRequired({
   onClose: () => void;
   reason?: "save" | "download" | "signin";
 }) {
+  const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState<null | "google" | "github" | "email">(null);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -22,6 +29,15 @@ export function LoginRequired({
       document.body.style.overflow = "";
     };
   }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open) {
+      // reset transient state when closing
+      setBusy(null);
+      setSent(false);
+      setError(null);
+    }
+  }, [open]);
 
   const copy = {
     save: {
@@ -42,6 +58,38 @@ export function LoginRequired({
   }[reason];
   const { heading, subtitle, Icon } = copy;
 
+  const redirectTo =
+    typeof window !== "undefined"
+      ? `${window.location.origin}${window.location.pathname}${window.location.search}`
+      : undefined;
+
+  const oauth = async (provider: "google" | "github") => {
+    setError(null);
+    setBusy(provider);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: { redirectTo },
+    });
+    if (error) {
+      setError(error.message);
+      setBusy(null);
+    }
+  };
+
+  const sendMagic = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setError(null);
+    setBusy("email");
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: redirectTo },
+    });
+    setBusy(null);
+    if (error) setError(error.message);
+    else setSent(true);
+  };
+
   return (
     <AnimatePresence>
       {open && (
@@ -59,7 +107,7 @@ export function LoginRequired({
             exit={{ opacity: 0, scale: 0.94, y: 12 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="login-modal relative w-full max-w-[420px] my-auto bg-card border border-border rounded-3xl shadow-2xl overflow-hidden"
+            className="relative w-full max-w-[420px] my-auto bg-card border border-border rounded-3xl shadow-2xl overflow-hidden"
           >
             <button
               aria-label="Close"
@@ -69,7 +117,7 @@ export function LoginRequired({
               <X size={18} />
             </button>
 
-            <div className="flex flex-col items-center text-center px-8 pt-10 pb-2">
+            <div className="flex flex-col items-center text-center px-8 pt-10 pb-6">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                 <Icon size={20} />
               </div>
@@ -81,30 +129,77 @@ export function LoginRequired({
               </p>
             </div>
 
-            <SignIn
-              routing="virtual"
-              signUpUrl="/sign-up"
-              fallbackRedirectUrl={typeof window !== "undefined" ? window.location.pathname + window.location.search : "/"}
-              appearance={{
-                elements: {
-                  rootBox: "w-full",
-                  cardBox: "!shadow-none !border-none !bg-transparent w-full !rounded-none",
-                  card: "!shadow-none !border-none !bg-transparent !p-0 !rounded-none",
-                  header: "!hidden",
-                  logoBox: "!hidden",
-                  logoImage: "!hidden",
-                  main: "!gap-4",
-                  footer: "!bg-transparent !border-none !shadow-none [&>*:last-child]:!hidden",
-                  footerAction: "!bg-transparent",
-                },
-                layout: {
-                  logoPlacement: "none",
-                  helpPageUrl: "",
-                  privacyPageUrl: "",
-                  termsPageUrl: "",
-                },
-              }}
-            />
+            <div className="px-8 pb-8 space-y-3">
+              {sent ? (
+                <div className="rounded-2xl border border-border bg-secondary/40 p-5 text-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center mx-auto mb-3">
+                    <Check size={18} />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground mb-1">Check your inbox</p>
+                  <p className="text-sm text-muted-foreground">
+                    We sent a magic link to <span className="font-medium text-foreground">{email}</span>. Click it to finish signing in.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => oauth("google")}
+                    disabled={!!busy}
+                    className="w-full flex items-center justify-center gap-3 h-11 rounded-full border border-border bg-card hover:bg-secondary text-foreground text-sm font-semibold transition-colors disabled:opacity-60"
+                  >
+                    {busy === "google" ? <Loader2 size={16} className="animate-spin" /> : <FcGoogle size={18} />}
+                    Continue with Google
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => oauth("github")}
+                    disabled={!!busy}
+                    className="w-full flex items-center justify-center gap-3 h-11 rounded-full border border-border bg-card hover:bg-secondary text-foreground text-sm font-semibold transition-colors disabled:opacity-60"
+                  >
+                    {busy === "github" ? <Loader2 size={16} className="animate-spin" /> : <FaGithub size={16} />}
+                    Continue with GitHub
+                  </button>
+
+                  <div className="flex items-center gap-3 py-2">
+                    <div className="flex-1 h-px bg-border" />
+                    <span className="text-xs uppercase tracking-wider text-muted-foreground">or</span>
+                    <div className="flex-1 h-px bg-border" />
+                  </div>
+
+                  <form onSubmit={sendMagic} className="space-y-3">
+                    <label className="block">
+                      <span className="text-xs font-semibold text-muted-foreground tracking-wide">EMAIL ADDRESS</span>
+                      <input
+                        type="email"
+                        autoComplete="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="mt-1.5 w-full h-11 px-4 rounded-full border border-border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors text-sm"
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      disabled={!!busy || !email.trim()}
+                      className="w-full flex items-center justify-center gap-2 h-11 rounded-full bg-primary text-primary-foreground text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity disabled:opacity-60"
+                    >
+                      {busy === "email" ? <Loader2 size={16} className="animate-spin" /> : <Mail size={16} />}
+                      Send magic link
+                    </button>
+                  </form>
+
+                  {error && (
+                    <p className="text-xs text-center text-red-500 pt-1">{error}</p>
+                  )}
+
+                  <p className="text-[11px] text-center text-muted-foreground pt-2 leading-relaxed">
+                    By continuing you agree to our Terms and acknowledge our Privacy Policy.
+                  </p>
+                </>
+              )}
+            </div>
           </motion.div>
         </motion.div>
       )}

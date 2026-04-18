@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import { useUser } from "@clerk/react";
+import { useAuth } from "@/components/AuthProvider";
 import { Bookmark, Clock, Sparkles } from "lucide-react";
 import { Header, AnnouncementBar } from "@/components/Header";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -44,7 +44,10 @@ function Grid({ slugs }: { slugs: string[] }) {
 }
 
 export default function Dashboard() {
-  const { user } = useUser();
+  const { user } = useAuth();
+  const firstName =
+    (user?.user_metadata?.full_name as string | undefined)?.split(" ")[0] ||
+    user?.email?.split("@")[0];
   const { data, isLoading } = useSaves();
   const [recent, setRecent] = useState<string[]>([]);
   useEffect(() => setRecent(getRecentlyViewed()), []);
@@ -60,7 +63,7 @@ export default function Dashboard() {
       <section className="px-8 pt-12 pb-10 w-full">
         <p className="text-sm font-medium text-muted-foreground mb-3">Your dashboard</p>
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.05]">
-          Welcome back{user?.firstName ? `, ${user.firstName}` : ""}.
+          Welcome back{firstName ? `, ${firstName}` : ""}.
         </h1>
         <p className="text-lg text-muted-foreground mt-4 max-w-2xl">
           Your saved illustrations, recently viewed pieces, and fresh picks curated for your taste.

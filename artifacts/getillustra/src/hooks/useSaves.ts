@@ -1,26 +1,55 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useUser } from "@clerk/react";
-import { api } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthProvider";
+
+export type SaveRow = { illustration_slug: string; created_at: string };
 
 export function useSaves() {
-  const { isSignedIn } = useUser();
+  const { user } = useAuth();
   return useQuery({
-    queryKey: ["saves"],
-    queryFn: () => api.getSaves(),
-    enabled: !!isSignedIn,
+    queryKey: ["saves", user?.id ?? "anon"],
+    queryFn: async (): Promise<{ saves: SaveRow[] }> => {
+      if (!user) return { saves: [] };
+      const { data, error } = await supabase
+        .from("saves")
+        .select("illustration_slug, created_at")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return { saves: (data ?? []) as SaveRow[] };
+    },
+    enabled: !!user,
   });
 }
 
 export function useToggleSave() {
   const qc = useQueryClient();
+  const { user } = useAuth();
+
   const add = useMutation({
-    mutationFn: (slug: string) => api.addSave(slug),
+    mutationFn: async (slug: string) => {
+      if (!user) throw new Error("Not signed in");
+      const { error } = await supabase
+        .from("saves")
+        .insert({ user_id: user.id, illustration_slug: slug });
+      if (error && !`${error.message}`.toLowerCase().includes("duplicate")) throw error;
+      return { ok: true as const };
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saves"] }),
   });
+
   const remove = useMutation({
-    mutationFn: (slug: string) => api.removeSave(slug),
+    mutationFn: async (slug: string) => {
+      if (!user) throw new Error("Not signed in");
+      const { error } = await supabase
+        .from("saves")
+        .delete()
+        .eq("illustration_slug", slug);
+      if (error) throw error;
+      return { ok: true as const };
+    },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["saves"] }),
   });
+
   return { add, remove };
 }
 

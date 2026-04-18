@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
-import { useUser } from "@clerk/react";
+import { useAuth } from "@/components/AuthProvider";
 import { ArrowLeft, ArrowUpRight, Bookmark, Download, Link2, Check, Circle, CheckCircle2 } from "lucide-react";
 import { GALLERY } from "@/lib/gallery";
 import { Header, AnnouncementBar } from "@/components/Header";
@@ -15,7 +15,8 @@ import { LoginRequired } from "@/components/LoginRequired";
 export default function Detail() {
   const params = useParams<{ slug: string }>();
   const item = GALLERY.find((g) => g.slug === params.slug);
-  const { isSignedIn } = useUser();
+  const { user } = useAuth();
+  const isSignedIn = !!user;
   const saved = useIsSaved(params.slug);
   const { add, remove } = useToggleSave();
   const [copied, setCopied] = useState(false);

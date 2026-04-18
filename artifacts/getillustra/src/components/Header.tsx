@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
-import { Show, useUser, useClerk } from "@clerk/react";
 import { Image as ImageIcon, Sun, Moon, LogOut, LayoutDashboard, Figma, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "./ThemeProvider";
 import { LoginRequired } from "./LoginRequired";
+import { useAuth } from "./AuthProvider";
 
 export function AnnouncementBar() {
   return (
@@ -23,8 +23,7 @@ export function AnnouncementBar() {
 
 export function Header() {
   const { theme, toggle } = useTheme();
-  const { user } = useUser();
-  const { signOut } = useClerk();
+  const { user, signOut } = useAuth();
   const [location] = useLocation();
   const [authOpen, setAuthOpen] = useState(false);
 
@@ -39,6 +38,12 @@ export function Header() {
       </Link>
     );
   };
+
+  const initial = (
+    (user?.user_metadata?.full_name as string | undefined)?.[0] ||
+    user?.email?.[0] ||
+    "U"
+  ).toUpperCase();
 
   return (
     <>
@@ -66,34 +71,36 @@ export function Header() {
             {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
           </button>
 
-          <Show when="signed-out">
-            <Button variant="ghost" className="hidden sm:flex" onClick={() => setAuthOpen(true)}>
-              Sign in
-            </Button>
-            <Button className="rounded-full shadow-sm hover-elevate" onClick={() => setAuthOpen(true)}>
-              Get Pro Access
-            </Button>
-          </Show>
-
-          <Show when="signed-in">
-            <Link href="/dashboard">
-              <Button variant="ghost" className="hidden sm:inline-flex gap-2">
-                <LayoutDashboard size={16} />
-                Dashboard
+          {!user ? (
+            <>
+              <Button variant="ghost" className="hidden sm:flex" onClick={() => setAuthOpen(true)}>
+                Sign in
               </Button>
-            </Link>
-            <button
-              onClick={() => signOut()}
-              aria-label="Sign out"
-              className="w-9 h-9 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-              title={user?.primaryEmailAddress?.emailAddress || "Sign out"}
-            >
-              <LogOut size={16} />
-            </button>
-            <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">
-              {(user?.firstName?.[0] || user?.primaryEmailAddress?.emailAddress?.[0] || "U").toUpperCase()}
-            </div>
-          </Show>
+              <Button className="rounded-full shadow-sm hover-elevate" onClick={() => setAuthOpen(true)}>
+                Get Pro Access
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/dashboard">
+                <Button variant="ghost" className="hidden sm:inline-flex gap-2">
+                  <LayoutDashboard size={16} />
+                  Dashboard
+                </Button>
+              </Link>
+              <button
+                onClick={() => signOut()}
+                aria-label="Sign out"
+                className="w-9 h-9 rounded-full border border-border bg-card flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                title={user.email || "Sign out"}
+              >
+                <LogOut size={16} />
+              </button>
+              <div className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-sm">
+                {initial}
+              </div>
+            </>
+          )}
         </div>
       </header>
 
