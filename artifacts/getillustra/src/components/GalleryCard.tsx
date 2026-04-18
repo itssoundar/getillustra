@@ -1,20 +1,9 @@
 import { Link } from "wouter";
-import { Show } from "@clerk/react";
-import { ArrowRight, Heart, Bookmark } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useIsSaved, useToggleSave } from "@/hooks/useSaves";
 import type { GalleryItem } from "@/lib/gallery";
 
 export function GalleryCard({ item }: { item: GalleryItem }) {
-  const saved = useIsSaved(item.slug);
-  const { add, remove } = useToggleSave();
-
-  const onToggle = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (saved) remove.mutate(item.slug);
-    else add.mutate(item.slug);
-  };
-
   return (
     <div className="group cursor-pointer h-full">
       <Link href={`/${item.slug}`} className="block h-full">
@@ -45,20 +34,6 @@ export function GalleryCard({ item }: { item: GalleryItem }) {
               <Badge className="bg-primary text-primary-foreground border-none shadow-sm">Pro</Badge>
             )}
           </div>
-
-          <Show when="signed-in">
-            <button
-              onClick={onToggle}
-              aria-label={saved ? "Unsave" : "Save"}
-              className={`absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center shadow-sm transition-colors ${
-                saved
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-background/80 text-foreground hover:bg-background"
-              }`}
-            >
-              <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
-            </button>
-          </Show>
         </div>
         <div className="flex items-center justify-between px-1 pt-3">
           <div className="flex items-center gap-2">

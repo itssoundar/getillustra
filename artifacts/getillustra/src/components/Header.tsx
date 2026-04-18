@@ -38,7 +38,7 @@ export function Header() {
   };
 
   return (
-    <header className="glass-nav py-4 px-3 md:px-4 flex items-center justify-between">
+    <header className="glass-nav py-4 px-8 flex items-center justify-between">
       <Link href="/" className="flex items-center gap-2">
         <div className="bg-primary w-8 h-8 rounded-lg flex items-center justify-center text-primary-foreground shadow-sm">
           <ImageIcon size={18} />

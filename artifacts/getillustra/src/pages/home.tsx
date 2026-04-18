@@ -43,7 +43,7 @@ export default function Home() {
       <Header />
 
       {/* Hero */}
-      <section className="pt-24 pb-20 px-6 text-center max-w-4xl mx-auto relative">
+      <section className="pt-24 pb-20 px-8 text-center max-w-4xl mx-auto relative">
         <div className="absolute top-10 left-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10 mix-blend-multiply"></div>
         <div className="absolute top-20 right-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl -z-10 mix-blend-multiply"></div>
 
@@ -85,7 +85,7 @@ export default function Home() {
       </section>
 
       {/* Trending */}
-      <section className="px-3 md:px-4 pb-12 w-full">
+      <section className="px-8 pb-12 w-full">
         <div className="flex items-end justify-between mb-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-2 flex items-center gap-2">
@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       {/* Filter Row */}
-      <section className="px-3 md:px-4 py-6 border-y border-border/50 bg-background/50 sticky top-[73px] z-40 backdrop-blur-md">
+      <section className="px-8 py-6 border-y border-border/50 bg-background/50 sticky top-[73px] z-40 backdrop-blur-md">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
           <div className="flex-1 overflow-x-auto pb-2 md:pb-0 hide-scrollbar flex items-center gap-2">
             {CATEGORIES.map((cat) => (
@@ -136,7 +136,7 @@ export default function Home() {
       </section>
 
       {/* Gallery Grid */}
-      <section className="py-8 px-3 md:px-4 w-full flex-1">
+      <section className="py-8 px-8 w-full flex-1">
         <motion.div layout className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 auto-rows-[10px]">
           {filteredGallery.map((item, index) => (
             <motion.div
@@ -171,7 +171,7 @@ export default function Home() {
       </section>
 
       {/* Figma Plugin */}
-      <section className="py-24 px-6 relative overflow-hidden bg-primary/5">
+      <section className="py-24 px-8 relative overflow-hidden bg-primary/5">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
           <div className="flex-1 max-w-xl">
             <div className="inline-flex items-center gap-2 bg-card border border-border px-3 py-1.5 rounded-full text-sm font-medium mb-6 shadow-sm">
@@ -226,7 +226,7 @@ export default function Home() {
       </section>
 
       {/* Newsletter */}
-      <section id="newsletter" className="py-20 px-6 bg-background">
+      <section id="newsletter" className="py-20 px-8 bg-background">
         <div className="max-w-2xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-card border border-border px-3 py-1.5 rounded-full text-sm font-medium mb-6 shadow-sm">
             <Mail size={14} className="text-primary" />

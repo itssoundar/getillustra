@@ -12,7 +12,7 @@ import { getRecentlyViewed } from "@/lib/recentlyViewed";
 
 function Section({ icon, title, subtitle, children }: { icon: React.ReactNode; title: string; subtitle: string; children: React.ReactNode }) {
   return (
-    <section className="px-3 md:px-4 pb-16 w-full">
+    <section className="px-8 pb-16 w-full">
       <div className="flex items-center gap-3 mb-2">
         <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center">{icon}</div>
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">{title}</h2>
@@ -57,7 +57,7 @@ export default function Dashboard() {
       <AnnouncementBar />
       <Header />
 
-      <section className="px-3 md:px-4 pt-12 pb-10 w-full">
+      <section className="px-8 pt-12 pb-10 w-full">
         <p className="text-sm font-medium text-muted-foreground mb-3">Your dashboard</p>
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.05]">
           Welcome back{user?.firstName ? `, ${user.firstName}` : ""}.

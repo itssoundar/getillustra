@@ -101,7 +101,7 @@ export default function Explore() {
       <AnnouncementBar />
       <Header />
 
-      <section className="px-3 md:px-4 pt-12 pb-8 w-full">
+      <section className="px-8 pt-12 pb-8 w-full">
         <div className="max-w-3xl">
           <p className="text-sm font-medium text-muted-foreground mb-3">Explore</p>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground leading-[1.05] mb-4">
@@ -128,14 +128,14 @@ export default function Explore() {
         </div>
       </section>
 
-      <section className="px-3 md:px-4 pb-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 border-y border-border/50 py-8 bg-background/50">
+      <section className="px-8 pb-8 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 border-y border-border/50 py-8 bg-background/50">
         <FilterGroup label="Industry" options={INDUSTRIES} selected={industries} onToggle={(v) => toggle(industries, setIndustries, v)} />
         <FilterGroup label="Style" options={STYLES} selected={styles} onToggle={(v) => toggle(styles, setStyles, v)} />
         <FilterGroup label="Color" options={COLORS} selected={colors} onToggle={(v) => toggle(colors, setColors, v)} />
         <FilterGroup label="Plan" options={PLANS} selected={plans} onToggle={(v) => toggle(plans, setPlans, v)} />
       </section>
 
-      <section className="px-3 md:px-4 py-8 w-full flex-1">
+      <section className="px-8 py-8 w-full flex-1">
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-muted-foreground">
             {filtered.length} match{filtered.length === 1 ? "" : "es"}

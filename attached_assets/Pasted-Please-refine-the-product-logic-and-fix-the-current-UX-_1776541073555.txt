@@ -1,0 +1,200 @@
+Please refine the product logic and fix the current UX flows with the following clear requirements.
+
+---------------------------------------------------
+CORE PRODUCT LOGIC
+---------------------------------------------------
+
+1. Homepage / Public Experience (No Login Required)
+
+Users should be able to browse all illustration projects freely on the home screen without logging in.
+
+This includes:
+- Viewing project cards
+- Scrolling gallery
+- Opening project detail pages
+- Exploring assets inside projects
+
+No login required for browsing.
+
+---------------------------------------------------
+
+2. Remove Save Button from Homepage Cards
+
+Do NOT show Save buttons on homepage project cards.
+
+Important:
+Project cards represent collections/projects, not individual downloadable assets.
+
+Users should not save entire project cards.
+
+Only show:
+- Thumbnail
+- Title
+- Hover effect
+- Open project action
+
+No save button on homepage cards.
+
+---------------------------------------------------
+
+3. Save Functionality Only Inside Project Detail Pages
+
+When user clicks a project card:
+
+Open the project detail page.
+
+Inside the detail page, show all individual illustration assets belonging to that project.
+
+Only these inner assets can be saved.
+
+Examples:
+Project = Fintech Pack
+
+Inside:
+- hero image
+- onboarding image
+- dashboard icon
+- mascot
+
+These individual assets can have Save functionality.
+
+---------------------------------------------------
+
+4. Detail Page Actions
+
+On project detail page:
+
+For each individual asset show:
+
+- Download
+- Save (only if logged in)
+
+Do NOT show save option for entire project container.
+
+---------------------------------------------------
+
+5. Login Gating Logic
+
+Save and Download actions should only work for logged-in users.
+
+If user clicks Save or Download while logged out:
+
+Show elegant centered popup modal with faded dark background.
+
+Popup content:
+
+Title:
+Login Required
+
+Subtitle:
+Please login to save or download illustrations.
+
+Buttons:
+- Continue with Google
+- Email Login
+- Close
+
+Smooth fade animation.
+
+---------------------------------------------------
+
+6. Popup / Modal Cleanup
+
+Current popup has unnecessary “More” button.
+
+Remove More button completely from popup.
+
+Replace with:
+
+- Download
+- Save (if logged in)
+
+If logged out:
+Clicking either opens login popup.
+
+---------------------------------------------------
+
+7. Fix More Button Issues
+
+Current issues to fix:
+
+- More button stays visible after clicking outside card
+- More dropdown does not close properly
+- Radio button options inside more menu not working
+
+Fix required behavior:
+
+When clicking outside:
+- Close dropdown instantly
+
+When selecting option:
+- Update state properly
+
+Use proper click outside detection and state reset.
+
+---------------------------------------------------
+
+8. Card Hover Behavior
+
+On individual asset cards:
+
+Hover shows:
+- Download icon
+- Save icon (if logged in)
+or locked icon if logged out
+
+No More button needed unless truly necessary.
+
+Keep UI clean.
+
+---------------------------------------------------
+
+9. UX Principles
+
+Keep logic simple:
+
+Homepage:
+Browse only
+
+Project detail page:
+Interact with assets
+
+Actions:
+Only for logged-in users
+
+---------------------------------------------------
+
+10. Final Desired Flow
+
+User lands homepage
+↓
+Browses projects
+↓
+Clicks project
+↓
+Opens detail page
+↓
+Sees assets
+↓
+Clicks Save or Download
+↓
+If logged out → Login popup
+If logged in → Action works
+
+---------------------------------------------------
+
+11. Additional Cleanup
+
+Please review all similar edge cases:
+
+- Dropdown not closing
+- Buttons overlapping
+- Hover flicker
+- Popup layering issues
+- Click outside modal
+- Mobile responsiveness
+
+---------------------------------------------------
+
+Goal:
+Make the platform feel polished, premium, and logically clean like a production-ready SaaS product.
