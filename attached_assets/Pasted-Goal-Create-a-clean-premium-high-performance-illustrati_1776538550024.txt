@@ -1,0 +1,106 @@
+Goal:
+Create a clean, premium, high-performance illustration inspiration platform for product designers, startups, and UI/UX teams. The platform should showcase curated product illustrations in a visually stunning gallery with search, filtering, and save features.
+
+Tech Stack:
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- TypeScript
+- Supabase (Auth + Database + Storage)
+- Framer Motion (animations)
+- Lucide Icons
+
+Design Direction:
+- Minimal, premium, modern SaaS aesthetic
+- Similar polish level to Mobbin / Pinterest / Layers / Framer-quality UI
+- Clean spacing, large imagery, subtle shadows
+- Smooth animations
+- Responsive mobile + desktop
+- Fast loading
+
+Pages Required:
+
+1. Homepage
+- Hero section:
+  Headline: Discover Beautiful Product Illustrations
+  Subheadline: Curated inspiration for designers, startups, and product teams
+- Search bar centered
+- Trending categories
+- Featured collections
+- Masonry / grid gallery of illustration cards
+- CTA to create free account
+
+2. Explore Page
+- Full searchable gallery
+- Filters:
+  - Industry (SaaS, Fintech, AI, Healthcare, Ecommerce)
+  - Style (3D, Flat, Isometric, Cartoon, Minimal)
+  - Color
+  - Free / Premium
+- Infinite scroll
+
+3. Detail Page
+- Large preview image
+- Title
+- Tags
+- Related inspirations
+- Save button
+- Download button
+- Share button
+
+4. Dashboard (Authenticated Users)
+- Saved Pins
+- Boards / Collections
+- Recently Viewed
+- Recommended Inspirations
+
+5. Auth Pages
+- Sign up
+- Google login
+- Magic link login
+
+Core Features:
+- Save illustrations to boards
+- Create collections
+- Search with keyword filtering
+- Responsive navbar
+- Dark/light mode
+- Smooth hover animations
+- Lazy loaded images
+- SEO friendly
+
+Database Schema (Supabase):
+users
+illustrations
+categories
+saved_items
+boards
+board_items
+
+Admin Features:
+- Upload new illustration
+- Add tags
+- Add categories
+- Mark featured
+- Manage users
+
+Seed with Demo Content:
+Use placeholder illustrations / gradients / generated thumbnails so site feels complete.
+
+Important UX:
+- Pinterest-style visual browsing
+- Fast and addictive discovery flow
+- Premium feeling interactions
+- Sticky navbar
+- Elegant hover states
+
+Output:
+Generate complete working project structure with reusable components, pages, Supabase integration, and polished UI.
+
+Bonus Features:
+- AI semantic search placeholder
+- Trending this week section
+- Recommended for you section
+- Newsletter signup
+
+Make it feel like a real startup-ready SaaS product, not a template.
