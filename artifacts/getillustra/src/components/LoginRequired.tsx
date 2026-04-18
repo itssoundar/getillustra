@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { SignIn } from "@clerk/react";
-import { Bookmark, Download, X } from "lucide-react";
+import { Bookmark, Download, X, LogIn } from "lucide-react";
 import { useEffect } from "react";
 
 export function LoginRequired({
@@ -10,7 +10,7 @@ export function LoginRequired({
 }: {
   open: boolean;
   onClose: () => void;
-  reason?: "save" | "download";
+  reason?: "save" | "download" | "signin";
 }) {
   useEffect(() => {
     if (!open) return;
@@ -23,12 +23,24 @@ export function LoginRequired({
     };
   }, [open, onClose]);
 
-  const isSave = reason === "save";
-  const heading = isSave ? "Sign in to save illustrations" : "Sign in to download illustrations";
-  const subtitle = isSave
-    ? "Create your personal collection and access your saved illustrations from any device."
-    : "Get instant access to high-quality downloads and unlock your personal library.";
-  const Icon = isSave ? Bookmark : Download;
+  const copy = {
+    save: {
+      heading: "Sign in to save illustrations",
+      subtitle: "Create your personal collection and access your saved illustrations from any device.",
+      Icon: Bookmark,
+    },
+    download: {
+      heading: "Sign in to download illustrations",
+      subtitle: "Get instant access to high-quality downloads and unlock your personal library.",
+      Icon: Download,
+    },
+    signin: {
+      heading: "Welcome to Getillustra",
+      subtitle: "Sign in to save, download, and build your personal library of illustrations.",
+      Icon: LogIn,
+    },
+  }[reason];
+  const { heading, subtitle, Icon } = copy;
 
   return (
     <AnimatePresence>
