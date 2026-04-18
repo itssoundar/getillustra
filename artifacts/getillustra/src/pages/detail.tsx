@@ -9,6 +9,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { GalleryCard } from "@/components/GalleryCard";
 import { useIsSaved, useToggleSave } from "@/hooks/useSaves";
 import { recordView } from "@/lib/recentlyViewed";
+import { Lightbox } from "@/components/Lightbox";
 
 export default function Detail() {
   const params = useParams<{ slug: string }>();
@@ -19,6 +20,7 @@ export default function Detail() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [openMenu, setOpenMenu] = useState<number | null>(null);
   const [tileCopied, setTileCopied] = useState<number | null>(null);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const toggleSelect = (i: number) => {
     setSelected((prev) => {
@@ -221,8 +223,9 @@ export default function Detail() {
                 <img
                   src={src}
                   alt={`${item.title} preview ${i + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover cursor-zoom-in"
                   loading="lazy"
+                  onClick={() => setLightboxIndex(i)}
                   onError={(e) => {
                     const t = e.target as HTMLImageElement;
                     t.src = `https://placehold.co/1200x900/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
@@ -367,6 +370,19 @@ export default function Detail() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Lightbox
+        open={lightboxIndex !== null}
+        images={item.previews}
+        index={lightboxIndex ?? 0}
+        title={item.title}
+        author={item.author}
+        category={item.category}
+        saved={saved}
+        onToggleSave={() => (saved ? remove.mutate(item.slug) : add.mutate(item.slug))}
+        onClose={() => setLightboxIndex(null)}
+        onIndexChange={(i) => setLightboxIndex(i)}
+      />
 
       {related.length > 0 && (
         <section className="px-3 md:px-4 w-full pb-24">
