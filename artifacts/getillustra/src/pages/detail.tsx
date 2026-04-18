@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
 import { useAuth } from "@/components/AuthProvider";
-import { ArrowLeft, ArrowUpRight, Bookmark, Download, Link2, Check, Circle, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Bookmark, Download, Link2, Check, Circle, CheckCircle2, X } from "lucide-react";
 import { GALLERY } from "@/lib/gallery";
 import { Header, AnnouncementBar } from "@/components/Header";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -75,6 +75,24 @@ export default function Detail() {
     if (saved) remove.mutate(item.slug);
     else add.mutate(item.slug);
   };
+
+  const downloadSelected = () => {
+    if (!isSignedIn) { setAuthPrompt("download"); return; }
+    if (!item) return;
+    Array.from(selected).sort((a, b) => a - b).forEach((i, n) => {
+      setTimeout(() => downloadAsset(item.previews[i], i), n * 200);
+    });
+    setSelected(new Set());
+  };
+
+  const saveSelected = () => {
+    if (!isSignedIn) { setAuthPrompt("save"); return; }
+    if (!item) return;
+    if (!saved) add.mutate(item.slug);
+    setSelected(new Set());
+  };
+
+  const clearSelected = () => setSelected(new Set());
 
   return (
     <div className="min-h-screen flex flex-col w-full overflow-x-hidden">
@@ -183,27 +201,27 @@ export default function Detail() {
                 {selected.has(i) ? <CheckCircle2 size={18} /> : <Circle size={16} />}
               </button>
 
-              {/* Top-right: Download + Save */}
-              <div className="absolute top-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={(e) => { e.stopPropagation(); downloadAsset(src, i); }}
-                  aria-label="Download"
-                  title="Download"
-                  className="w-9 h-9 rounded-full bg-white/90 backdrop-blur-md text-foreground flex items-center justify-center shadow-md hover:bg-white transition-colors"
-                >
-                  <Download size={16} />
-                </button>
+              {/* Bottom: Save + Download pills */}
+              <div className="absolute inset-x-3 bottom-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={(e) => { e.stopPropagation(); toggleAssetSave(); }}
                   aria-label={saved ? "Unsave" : "Save"}
-                  title={saved ? "Unsave" : "Save"}
-                  className={`w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center shadow-md transition-colors ${
+                  className={`flex-1 h-11 rounded-full flex items-center justify-center gap-2 text-sm font-semibold shadow-lg transition-colors ${
                     isSignedIn && saved
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-white/90 text-foreground hover:bg-white"
+                      ? "bg-primary text-primary-foreground hover:opacity-90"
+                      : "bg-white text-foreground hover:bg-white/95"
                   }`}
                 >
                   <Bookmark size={16} fill={isSignedIn && saved ? "currentColor" : "none"} />
+                  {isSignedIn && saved ? "Saved" : "Save"}
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); downloadAsset(src, i); }}
+                  aria-label="Download"
+                  className="flex-1 h-11 rounded-full flex items-center justify-center gap-2 text-sm font-semibold bg-black/55 text-white backdrop-blur-md hover:bg-black/70 transition-colors shadow-lg"
+                >
+                  <Download size={16} />
+                  Download
                 </button>
               </div>
             </motion.div>
@@ -232,6 +250,45 @@ export default function Detail() {
         reason={authPrompt ?? "save"}
         onClose={() => setAuthPrompt(null)}
       />
+
+      {/* Multi-select floating toolbar */}
+      <motion.div
+        initial={false}
+        animate={{
+          opacity: selected.size > 0 ? 1 : 0,
+          y: selected.size > 0 ? 0 : 24,
+          pointerEvents: selected.size > 0 ? "auto" : "none",
+        }}
+        transition={{ duration: 0.2 }}
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+      >
+        <div className="flex items-center gap-2 pl-5 pr-2 py-2 rounded-full bg-foreground text-background shadow-2xl border border-foreground/20">
+          <span className="text-sm font-semibold whitespace-nowrap">
+            {selected.size} selected
+          </span>
+          <button
+            onClick={clearSelected}
+            className="ml-2 inline-flex items-center gap-1.5 px-4 h-9 rounded-full border border-background/30 text-background/80 hover:text-background hover:border-background/60 text-sm font-medium transition-colors"
+          >
+            <X size={14} />
+            Clear
+          </button>
+          <button
+            onClick={downloadSelected}
+            className="inline-flex items-center gap-2 px-4 h-9 rounded-full text-background hover:bg-background/10 text-sm font-semibold transition-colors"
+          >
+            <Download size={16} />
+            Download
+          </button>
+          <button
+            onClick={saveSelected}
+            className="inline-flex items-center gap-2 px-5 h-9 rounded-full bg-background text-foreground hover:opacity-90 text-sm font-semibold transition-opacity"
+          >
+            <Bookmark size={14} />
+            Save
+          </button>
+        </div>
+      </motion.div>
 
       {related.length > 0 && (
         <section className="px-8 w-full pb-24">
