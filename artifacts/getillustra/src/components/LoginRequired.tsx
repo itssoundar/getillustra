@@ -59,7 +59,7 @@ export function LoginRequired({
             exit={{ opacity: 0, scale: 0.94, y: 12 }}
             transition={{ duration: 0.2 }}
             onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md my-auto bg-card border border-border rounded-3xl shadow-2xl pt-8 pb-2 px-2"
+            className="login-modal relative w-full max-w-[420px] my-auto bg-card border border-border rounded-3xl shadow-2xl overflow-hidden"
           >
             <button
               aria-label="Close"
@@ -69,7 +69,7 @@ export function LoginRequired({
               <X size={18} />
             </button>
 
-            <div className="flex flex-col items-center text-center px-6 mb-2">
+            <div className="flex flex-col items-center text-center px-8 pt-10 pb-2">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4">
                 <Icon size={20} />
               </div>
@@ -88,13 +88,20 @@ export function LoginRequired({
               appearance={{
                 elements: {
                   rootBox: "w-full",
-                  cardBox: "shadow-none border-none bg-transparent w-full mx-auto",
-                  card: "shadow-none border-none bg-transparent p-4",
-                  header: "hidden",
-                  headerTitle: "hidden",
-                  headerSubtitle: "hidden",
-                  logoBox: "hidden",
-                  footer: "bg-transparent",
+                  cardBox: "!shadow-none !border-none !bg-transparent w-full !rounded-none",
+                  card: "!shadow-none !border-none !bg-transparent !p-0 !rounded-none",
+                  header: "!hidden",
+                  logoBox: "!hidden",
+                  logoImage: "!hidden",
+                  main: "!gap-4",
+                  footer: "!bg-transparent !border-none !shadow-none [&>*:last-child]:!hidden",
+                  footerAction: "!bg-transparent",
+                },
+                layout: {
+                  logoPlacement: "none",
+                  helpPageUrl: "",
+                  privacyPageUrl: "",
+                  termsPageUrl: "",
                 },
               }}
             />
