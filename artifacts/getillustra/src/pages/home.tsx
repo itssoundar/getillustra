@@ -125,10 +125,10 @@ export default function Home() {
       </section>
 
       {/* Gallery Grid */}
-      <section className="py-16 px-6 md:px-12 max-w-[1400px] mx-auto w-full flex-1">
+      <section className="py-8 px-3 md:px-4 w-full flex-1">
         <motion.div 
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
         >
           {filteredGallery.map((item, index) => (
             <motion.div 
