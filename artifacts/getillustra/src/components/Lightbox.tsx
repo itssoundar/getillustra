@@ -72,12 +72,12 @@ export function Lightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex flex-col"
+          className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex flex-col"
           onClick={onClose}
         >
           {/* Top bar */}
           <div
-            className="flex items-center justify-between px-4 md:px-6 py-4 text-white"
+            className="flex items-center justify-between px-4 md:px-6 py-4 text-foreground"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ export function Lightbox({
                 aria-label="Save"
                 onClick={onToggleSave}
                 className={`hidden sm:flex w-9 h-9 rounded-full items-center justify-center transition-colors ${
-                  saved ? "bg-primary text-primary-foreground" : "text-white/80 hover:bg-white/10"
+                  saved ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 }`}
               >
                 <Bookmark size={16} fill={saved ? "currentColor" : "none"} />
@@ -99,14 +99,14 @@ export function Lightbox({
               <button
                 aria-label="Copy link"
                 onClick={copyLink}
-                className="hidden sm:flex w-9 h-9 rounded-full text-white/80 hover:bg-white/10 items-center justify-center"
+                className="hidden sm:flex w-9 h-9 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground items-center justify-center"
               >
                 {copied ? <Check size={16} /> : <LinkIcon size={16} />}
               </button>
               <button
                 aria-label="Close"
                 onClick={onClose}
-                className="w-9 h-9 rounded-full text-white/80 hover:bg-white/10 flex items-center justify-center"
+                className="w-9 h-9 rounded-full text-muted-foreground hover:bg-secondary hover:text-foreground flex items-center justify-center"
               >
                 <X size={18} />
               </button>
@@ -120,7 +120,7 @@ export function Lightbox({
               <button
                 aria-label="Previous"
                 onClick={(e) => { e.stopPropagation(); onIndexChange((index - 1 + images.length) % images.length); }}
-                className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white items-center justify-center transition-colors"
+                className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-card border border-border text-foreground hover:bg-secondary items-center justify-center transition-colors shadow-md"
               >
                 <ArrowLeft size={18} />
               </button>
@@ -146,7 +146,7 @@ export function Lightbox({
               <button
                 aria-label="Next"
                 onClick={(e) => { e.stopPropagation(); onIndexChange((index + 1) % images.length); }}
-                className="absolute right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white items-center justify-center flex transition-colors"
+                className="absolute right-6 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-card border border-border text-foreground hover:bg-secondary items-center justify-center flex transition-colors shadow-md"
               >
                 <ArrowRight size={18} />
               </button>
@@ -155,7 +155,7 @@ export function Lightbox({
 
           {/* Bottom action cluster */}
           <div
-            className="absolute bottom-0 left-0 right-0 pb-6 pt-12 bg-gradient-to-t from-black/60 to-transparent flex flex-col items-center gap-4 pointer-events-none"
+            className="absolute bottom-0 left-0 right-0 pb-6 pt-12 bg-gradient-to-t from-background/80 to-transparent flex flex-col items-center gap-4 pointer-events-none"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2 pointer-events-auto" onClick={(e) => e.stopPropagation()}>
@@ -164,7 +164,7 @@ export function Lightbox({
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg transition-colors ${
                   saved
                     ? "bg-primary text-primary-foreground"
-                    : "bg-white text-foreground hover:bg-white/95"
+                    : "bg-card text-foreground border border-border hover:bg-secondary"
                 }`}
               >
                 <Bookmark size={14} fill={saved ? "currentColor" : "none"} />
@@ -172,7 +172,7 @@ export function Lightbox({
               </button>
               <button
                 onClick={copyLink}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 text-white text-sm font-semibold backdrop-blur-md hover:bg-white/20 transition-colors"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-card text-foreground border border-border text-sm font-semibold hover:bg-secondary transition-colors shadow-md"
               >
                 {copied ? <Check size={14} /> : <Copy size={14} />}
                 {copied ? "Copied" : "Copy"}
@@ -181,7 +181,7 @@ export function Lightbox({
                 <button
                   aria-label="More"
                   onClick={() => setMenuOpen((v) => !v)}
-                  className="w-10 h-10 rounded-full bg-white/10 text-white backdrop-blur-md hover:bg-white/20 transition-colors flex items-center justify-center"
+                  className="w-10 h-10 rounded-full bg-card text-foreground border border-border hover:bg-secondary transition-colors flex items-center justify-center shadow-md"
                 >
                   <MoreHorizontal size={18} />
                 </button>
@@ -220,7 +220,7 @@ export function Lightbox({
 
             <button
               onClick={onClose}
-              className="pointer-events-auto inline-flex items-center gap-1 text-white/70 hover:text-white text-xs font-medium"
+              className="pointer-events-auto inline-flex items-center gap-1 text-muted-foreground hover:text-foreground text-xs font-medium"
             >
               See similar <ChevronDown size={12} />
             </button>
@@ -228,15 +228,15 @@ export function Lightbox({
 
           {/* Footer meta */}
           <div
-            className="absolute bottom-4 left-4 md:left-6 text-white/70 text-xs flex items-center gap-2 pointer-events-none"
+            className="absolute bottom-4 left-4 md:left-6 text-muted-foreground text-xs flex items-center gap-2 pointer-events-none"
           >
-            <span className="opacity-70">Found in</span>
-            <span className="px-2 py-0.5 rounded-md bg-white/10 text-white font-medium">{category}</span>
-            <span className="opacity-70 hidden sm:inline">· {author}</span>
+            <span>Found in</span>
+            <span className="px-2 py-0.5 rounded-md bg-secondary text-foreground font-medium">{category}</span>
+            <span className="hidden sm:inline">· {author}</span>
           </div>
-          <div className="absolute bottom-4 right-4 md:right-6 text-white/70 text-xs flex items-center gap-3 pointer-events-none">
+          <div className="absolute bottom-4 right-4 md:right-6 text-muted-foreground text-xs flex items-center gap-3 pointer-events-none">
             <span>{index + 1} / {images.length}</span>
-            <span className="hidden sm:inline opacity-70">More info</span>
+            <span className="hidden sm:inline">More info</span>
           </div>
         </motion.div>
       )}
