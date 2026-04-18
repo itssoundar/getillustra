@@ -126,58 +126,58 @@ export default function Home() {
 
       {/* Gallery Grid */}
       <section className="py-8 px-3 md:px-4 w-full flex-1">
-        <motion.div 
+        <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"
+          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 [column-fill:_balance]"
         >
           {filteredGallery.map((item, index) => (
-            <motion.div 
+            <motion.div
               layout
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              key={item.id} 
-              className="group cursor-pointer"
+              transition={{ duration: 0.4, delay: index * 0.04 }}
+              key={item.id}
+              className="group cursor-pointer mb-3 break-inside-avoid"
             >
               <Link href={`/${item.slug}`} className="block">
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary mb-4 border border-border/50">
-                <img 
-                  src={item.image} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = `https://placehold.co/800x600/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-                  <div className="flex items-center justify-between text-white">
-                    <span className="font-medium">{item.title}</span>
-                    <button className="bg-white/20 backdrop-blur-md rounded-full p-2 hover:bg-white/40 transition-colors">
-                      <ArrowRight size={16} />
-                    </button>
+                <div className="relative rounded-2xl overflow-hidden bg-secondary border border-border/50">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.03]"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = `https://placehold.co/800x600/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                    <div className="flex items-center justify-between text-white">
+                      <span className="font-medium">{item.title}</span>
+                      <span className="bg-white/20 backdrop-blur-md rounded-full p-2">
+                        <ArrowRight size={16} />
+                      </span>
+                    </div>
+                  </div>
+                  <div className="absolute top-3 left-3">
+                    <Badge variant="secondary" className="bg-background/80 backdrop-blur-md border-none shadow-sm text-foreground">
+                      {item.category}
+                    </Badge>
                   </div>
                 </div>
-                <div className="absolute top-4 left-4">
-                  <Badge variant="secondary" className="bg-background/80 backdrop-blur-md border-none shadow-sm text-foreground">
-                    {item.category}
-                  </Badge>
-                </div>
-              </div>
-              <div className="flex items-center justify-between px-1">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
-                    {item.author.charAt(0)}
+                <div className="flex items-center justify-between px-1 pt-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
+                      {item.author.charAt(0)}
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">{item.author}</span>
                   </div>
-                  <span className="text-sm font-medium text-muted-foreground">{item.author}</span>
+                  <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                    </svg>
+                    {item.likes}
+                  </span>
                 </div>
-                <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinelinejoin="round">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                  </svg>
-                  {item.likes}
-                </span>
-              </div>
               </Link>
             </motion.div>
           ))}
