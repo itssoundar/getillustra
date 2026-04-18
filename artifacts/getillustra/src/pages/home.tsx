@@ -6,6 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { GALLERY, CATEGORIES } from "@/lib/gallery";
 
+// Varied row spans (rows are 10px each + 12px gap) to create a bento layout.
+// Pattern repeats every 8 cards: tall, short, medium, tall, medium, tall, short, medium.
+const BENTO_SPANS = [
+  "row-span-[28]",
+  "row-span-[20]",
+  "row-span-[24]",
+  "row-span-[30]",
+  "row-span-[22]",
+  "row-span-[32]",
+  "row-span-[18]",
+  "row-span-[26]",
+];
+
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All");
 
@@ -128,23 +141,25 @@ export default function Home() {
       <section className="py-8 px-3 md:px-4 w-full flex-1">
         <motion.div
           layout
-          className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-3 [column-fill:_balance]"
+          className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 auto-rows-[10px]"
         >
-          {filteredGallery.map((item, index) => (
+          {filteredGallery.map((item, index) => {
+            const spanClass = BENTO_SPANS[index % BENTO_SPANS.length];
+            return (
             <motion.div
               layout
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: index * 0.04 }}
               key={item.id}
-              className="group cursor-pointer mb-3 break-inside-avoid"
+              className={`group cursor-pointer ${spanClass}`}
             >
-              <Link href={`/${item.slug}`} className="block">
-                <div className="relative rounded-2xl overflow-hidden bg-secondary border border-border/50">
+              <Link href={`/${item.slug}`} className="block h-full">
+                <div className="relative h-full rounded-2xl overflow-hidden bg-secondary border border-border/50">
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-auto block transition-transform duration-700 group-hover:scale-[1.03]"
+                    className="w-full h-full object-cover block transition-transform duration-700 group-hover:scale-[1.04]"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = `https://placehold.co/800x600/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
@@ -180,7 +195,8 @@ export default function Home() {
                 </div>
               </Link>
             </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
         
         {filteredGallery.length === 0 && (
