@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useParams } from "wouter";
 import { Show } from "@clerk/react";
-import { ArrowLeft, ArrowUpRight, Bookmark, Download, Share2, Check } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Bookmark, Download, Share2, Check, MoreHorizontal, Link as LinkIcon, Copy, X, Figma } from "lucide-react";
 import { GALLERY } from "@/lib/gallery";
 import { Header, AnnouncementBar } from "@/components/Header";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -16,6 +16,65 @@ export default function Detail() {
   const saved = useIsSaved(params.slug);
   const { add, remove } = useToggleSave();
   const [copied, setCopied] = useState(false);
+  const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [openMenu, setOpenMenu] = useState<number | null>(null);
+  const [tileCopied, setTileCopied] = useState<number | null>(null);
+
+  const toggleSelect = (i: number) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  };
+
+  const copyTileLink = async (src: string, i: number) => {
+    const absolute = new URL(src, window.location.origin).toString();
+    try {
+      await navigator.clipboard.writeText(absolute);
+      setTileCopied(i);
+      setTimeout(() => setTileCopied((v) => (v === i ? null : v)), 1500);
+    } catch {
+      // ignore
+    }
+    setOpenMenu(null);
+  };
+
+  const downloadTile = (src: string, i: number) => {
+    const a = document.createElement("a");
+    a.href = src;
+    a.download = `${params.slug}-${i + 1}.png`;
+    a.click();
+    setOpenMenu(null);
+  };
+
+  const downloadSelected = () => {
+    if (!item) return;
+    Array.from(selected).forEach((i, idx) => {
+      setTimeout(() => downloadTile(item.previews[i], i), idx * 250);
+    });
+  };
+
+  const copySelectedLinks = async () => {
+    if (!item) return;
+    const urls = Array.from(selected).map((i) =>
+      new URL(item.previews[i], window.location.origin).toString(),
+    );
+    try {
+      await navigator.clipboard.writeText(urls.join("\n"));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // ignore
+    }
+  };
+
+  const saveAllSelected = () => {
+    if (!item) return;
+    if (!saved) add.mutate(item.slug);
+    setSelected(new Set());
+  };
 
   useEffect(() => {
     if (item) recordView(item.slug);
@@ -145,29 +204,169 @@ export default function Detail() {
 
       <section className="px-3 md:px-4 w-full pb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {item.previews.map((src, i) => (
-            <motion.div
-              key={`${src}-${i}`}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.5, delay: (i % 4) * 0.05 }}
-              className="rounded-3xl overflow-hidden bg-secondary border border-border/60 aspect-[4/3]"
-            >
-              <img
-                src={src}
-                alt={`${item.title} preview ${i + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                onError={(e) => {
-                  const t = e.target as HTMLImageElement;
-                  t.src = `https://placehold.co/1200x900/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
-                }}
-              />
-            </motion.div>
-          ))}
+          {item.previews.map((src, i) => {
+            const isSelected = selected.has(i);
+            const isMenuOpen = openMenu === i;
+            return (
+              <motion.div
+                key={`${src}-${i}`}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.5, delay: (i % 4) * 0.05 }}
+                className={`group relative rounded-3xl overflow-hidden bg-secondary border aspect-[4/3] transition-all ${
+                  isSelected ? "border-primary ring-2 ring-primary/40" : "border-border/60"
+                }`}
+              >
+                <img
+                  src={src}
+                  alt={`${item.title} preview ${i + 1}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    const t = e.target as HTMLImageElement;
+                    t.src = `https://placehold.co/1200x900/f5f0eb/262626?text=${encodeURIComponent(item.title)}`;
+                  }}
+                />
+
+                {/* Hover gradient */}
+                <div className={`pointer-events-none absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/40 transition-opacity duration-200 ${
+                  isSelected || isMenuOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                }`} />
+
+                {/* Top-left: select radio */}
+                <button
+                  onClick={() => toggleSelect(i)}
+                  aria-label={isSelected ? "Deselect" : "Select"}
+                  className={`absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground opacity-100 shadow-md"
+                      : "bg-white/85 backdrop-blur-md text-foreground opacity-0 group-hover:opacity-100 hover:bg-white"
+                  }`}
+                >
+                  {isSelected ? (
+                    <Check size={16} strokeWidth={3} />
+                  ) : (
+                    <span className="w-4 h-4 rounded-full border-2 border-current" />
+                  )}
+                </button>
+
+                {/* Top-right: more menu */}
+                <div className={`absolute top-3 right-3 transition-opacity ${
+                  isMenuOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                }`}>
+                  <button
+                    onClick={() => setOpenMenu(isMenuOpen ? null : i)}
+                    aria-label="More actions"
+                    className="w-8 h-8 rounded-full bg-white/85 backdrop-blur-md text-foreground flex items-center justify-center hover:bg-white shadow-sm"
+                  >
+                    <MoreHorizontal size={16} />
+                  </button>
+                  <AnimatePresence>
+                    {isMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -4, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -4, scale: 0.96 }}
+                        transition={{ duration: 0.12 }}
+                        className="absolute right-0 mt-2 w-48 rounded-2xl bg-card border border-border shadow-xl overflow-hidden z-10"
+                      >
+                        <button
+                          onClick={() => downloadTile(src, i)}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors text-left"
+                        >
+                          <Download size={15} /> Download
+                        </button>
+                        <button
+                          onClick={() => copyTileLink(src, i)}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors text-left"
+                        >
+                          <LinkIcon size={15} />
+                          {tileCopied === i ? "Link copied" : "Copy link"}
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Bottom: Save + Copy */}
+                <div className={`absolute bottom-3 left-3 right-3 flex items-center gap-2 transition-opacity ${
+                  isMenuOpen ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                }`}>
+                  <button
+                    onClick={() => (saved ? remove.mutate(item.slug) : add.mutate(item.slug))}
+                    className="flex-1 px-4 py-2.5 rounded-full bg-white text-foreground text-sm font-semibold shadow-sm hover:bg-white/95 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Bookmark size={14} fill={saved ? "currentColor" : "none"} />
+                    {saved ? "Saved" : "Save"}
+                  </button>
+                  <button
+                    onClick={() => copyTileLink(src, i)}
+                    className="flex-1 px-4 py-2.5 rounded-full bg-foreground/85 text-background text-sm font-semibold backdrop-blur-md hover:bg-foreground transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Copy size={14} />
+                    {tileCopied === i ? "Copied" : "Copy"}
+                  </button>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
+
+      {/* Floating multi-select bar */}
+      <AnimatePresence>
+        {selected.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50"
+          >
+            <div className="flex items-center gap-2 md:gap-4 px-3 py-2 rounded-full bg-foreground/95 backdrop-blur-xl text-background shadow-2xl">
+              <span className="pl-3 pr-1 text-sm font-medium whitespace-nowrap">
+                {selected.size} selected
+              </span>
+              <button
+                onClick={() => setSelected(new Set())}
+                className="px-3 py-2 text-sm font-medium opacity-80 hover:opacity-100 hover:bg-white/10 rounded-full transition-colors"
+              >
+                Clear
+              </button>
+              <button
+                onClick={downloadSelected}
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-white/10 rounded-full transition-colors"
+              >
+                <Download size={16} />
+                <span className="hidden sm:inline px-2 py-0.5 rounded-full bg-white/15 text-[10px] font-bold tracking-wide">PRO</span>
+              </button>
+              <button
+                onClick={copySelectedLinks}
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium hover:bg-white/10 rounded-full transition-colors"
+              >
+                {copied ? <Check size={16} /> : <Copy size={16} />}
+                <span className="hidden sm:inline">{copied ? "Copied" : "Copy"}</span>
+                <Figma size={14} className="opacity-70" />
+              </button>
+              <button
+                onClick={saveAllSelected}
+                className="flex items-center gap-2 px-4 py-2 rounded-full bg-white text-foreground text-sm font-semibold hover:bg-white/95 transition-colors"
+              >
+                <Bookmark size={14} />
+                Save
+              </button>
+              <button
+                onClick={() => setSelected(new Set())}
+                aria-label="Close"
+                className="w-8 h-8 ml-1 rounded-full hover:bg-white/10 flex items-center justify-center"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {related.length > 0 && (
         <section className="px-3 md:px-4 w-full pb-24">
