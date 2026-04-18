@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "wouter";
 import { useUser } from "@clerk/react";
-import { ArrowLeft, ArrowUpRight, Bookmark, Download, Share2, Check, Lock } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Bookmark, Download, Link2, Check, Lock } from "lucide-react";
 import { GALLERY } from "@/lib/gallery";
 import { Header, AnnouncementBar } from "@/components/Header";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -45,12 +45,8 @@ export default function Detail() {
 
   const related = GALLERY.filter((g) => g.category === item.category && g.id !== item.id).slice(0, 4);
 
-  const onShare = async () => {
-    const url = window.location.href;
-    if (navigator.share) {
-      try { await navigator.share({ title: item.title, url }); return; } catch { /* fallback */ }
-    }
-    await navigator.clipboard.writeText(url);
+  const onCopyLink = async () => {
+    await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -113,9 +109,9 @@ export default function Detail() {
               </button>
             </a>
 
-            <button onClick={onShare} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-card border border-border text-foreground text-sm font-semibold hover:bg-secondary transition-colors shadow-sm">
-              {copied ? <Check size={16} /> : <Share2 size={16} />}
-              {copied ? "Link copied" : "Share"}
+            <button onClick={onCopyLink} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-card border border-border text-foreground text-sm font-semibold hover:bg-secondary transition-colors shadow-sm">
+              {copied ? <Check size={16} /> : <Link2 size={16} />}
+              {copied ? "Link copied" : "Copy link"}
             </button>
 
             <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-card border border-border">
