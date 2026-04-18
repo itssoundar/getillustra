@@ -1,25 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Figma, ExternalLink, Image as ImageIcon, Search, ChevronDown, Check } from "lucide-react";
+import { Link } from "wouter";
+import { ArrowRight, Figma, ExternalLink, Image as ImageIcon, Search, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-const CATEGORIES = ["All", "2D", "3D", "Collage Art", "Doodle/Typo", "Isometric", "Mobile App", "Website"];
-
-const GALLERY = [
-  { id: 1, title: "Abstract Geometry", category: "3D", author: "Studio Nova", image: "/images/3d-1.png", likes: 342 },
-  { id: 2, title: "Modern Workspace", category: "Isometric", author: "IsoLabs", image: "/images/iso-1.png", likes: 891 },
-  { id: 3, title: "Creative Chaos", category: "Doodle/Typo", author: "Scribble Inc", image: "/images/doodle-1.png", likes: 420 },
-  { id: 4, title: "Fintech Dashboard", category: "Mobile App", author: "UI Masters", image: "/images/mobile-1.png", likes: 567 },
-  { id: 5, title: "Collaboration Hero", category: "Website", author: "Pixel Perfect", image: "/images/web-1.png", likes: 234 },
-  { id: 6, title: "Vintage Surrealism", category: "Collage Art", author: "Artisan Co", image: "/images/collage-1.png", likes: 678 },
-  { id: 7, title: "Friendly Mascot", category: "3D", author: "Clay World", image: "/images/3d-2.png", likes: 1120 },
-  { id: 8, title: "Cozy Cafe", category: "Isometric", author: "IsoLabs", image: "/images/iso-2.png", likes: 890 },
-  { id: 9, title: "Organic Flow", category: "2D", author: "Vector Space", image: "/images/2d-1.png", likes: 445 },
-  { id: 10, title: "Rocket Onboarding", category: "Mobile App", author: "UI Masters", image: "/images/mobile-2.png", likes: 334 },
-  { id: 11, title: "Floral Architecture", category: "Collage Art", author: "Artisan Co", image: "/images/collage-2.png", likes: 789 },
-  { id: 12, title: "Energy Poster", category: "Doodle/Typo", author: "Scribble Inc", image: "/images/doodle-2.png", likes: 512 },
-];
+import { GALLERY, CATEGORIES } from "@/lib/gallery";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -154,6 +139,7 @@ export default function Home() {
               key={item.id} 
               className="group cursor-pointer"
             >
+              <Link href={`/${item.slug}`} className="block">
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-secondary mb-4 border border-border/50">
                 <img 
                   src={item.image} 
@@ -192,6 +178,7 @@ export default function Home() {
                   {item.likes}
                 </span>
               </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
