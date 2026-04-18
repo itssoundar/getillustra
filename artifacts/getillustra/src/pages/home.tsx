@@ -109,8 +109,8 @@ export default function Home() {
       </section>
 
       {/* Filter Row */}
-      <section className="px-6 md:px-12 py-6 border-y border-border/50 bg-background/50 sticky top-[73px] z-40 backdrop-blur-md">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 max-w-7xl mx-auto w-full">
+      <section className="px-3 md:px-4 py-6 border-y border-border/50 bg-background/50 sticky top-[73px] z-40 backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
           <div className="flex-1 overflow-x-auto pb-2 md:pb-0 hide-scrollbar flex items-center gap-2">
             {CATEGORIES.map((cat) => (
               <button
@@ -289,8 +289,8 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <footer className="bg-card border-t border-border py-12 px-3 md:px-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 w-full">
           <div className="flex items-center gap-2">
             <div className="bg-primary w-6 h-6 rounded flex items-center justify-center text-primary-foreground">
               <ImageIcon size={12} />

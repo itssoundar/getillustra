@@ -56,7 +56,7 @@ export default function Detail() {
       </header>
 
       {/* Header */}
-      <section className="px-6 md:px-12 pt-10 pb-12 max-w-[1400px] mx-auto w-full">
+      <section className="px-3 md:px-4 pt-10 pb-12 w-full">
         <Link href="/">
           <button className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border text-sm font-medium text-foreground hover:bg-secondary transition-colors shadow-sm">
             <ArrowLeft size={16} />
@@ -95,8 +95,8 @@ export default function Detail() {
       </section>
 
       {/* Preview Stack */}
-      <section className="px-6 md:px-12 max-w-[1400px] mx-auto w-full pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="px-3 md:px-4 w-full pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {item.previews.map((src, i) => (
             <motion.div
               key={`${src}-${i}`}
@@ -122,13 +122,13 @@ export default function Detail() {
 
       {/* Related */}
       {related.length > 0 && (
-        <section className="px-6 md:px-12 max-w-[1400px] mx-auto w-full pb-24">
+        <section className="px-3 md:px-4 w-full pb-24">
           <div className="border-t border-border pt-12 mb-10">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-2">More from this category</h2>
             <p className="text-muted-foreground">Discover additional inspiration curated for {item.category}.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {related.map((r, index) => (
               <motion.div
                 key={r.id}
@@ -169,8 +169,8 @@ export default function Detail() {
       )}
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-12 px-6 mt-auto">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <footer className="bg-card border-t border-border py-12 px-3 md:px-4 mt-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 w-full">
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-primary w-6 h-6 rounded flex items-center justify-center text-primary-foreground">
               <ImageIcon size={12} />
