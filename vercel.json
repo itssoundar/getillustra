@@ -3,7 +3,7 @@
   "framework": null,
   "installCommand": "npm install -g pnpm@10.26.1 && pnpm install --no-frozen-lockfile",
   "buildCommand": "pnpm --filter @workspace/getillustra build",
-  "outputDirectory": "artifacts/getillustra/dist/public",
+  "outputDirectory": "artifacts/getillustra/dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
